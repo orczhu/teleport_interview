@@ -1,0 +1,16 @@
+# Go build and test artifacts
+*.exe
+*.test
+*.out
+*.prof
+coverage.txt
+
+# Locally built binaries
+bin/
+jobctl
+job-workerd
+
+# Editor and OS files
+.DS_Store
+.idea/
+.vscode/
