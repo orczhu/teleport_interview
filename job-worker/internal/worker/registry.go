@@ -6,9 +6,9 @@ import (
 )
 
 var (
-	ErrNilJob      = errors.New("empty job")
-	ErrDupicateJob = errors.New("dupicate job")
-	ErrJobNotFound = errors.New("invald job")
+	ErrNilJob       = errors.New("empty job")
+	ErrDuplicateJob = errors.New("dupicate job")
+	ErrJobNotFound  = errors.New("invalid job")
 )
 
 type Registry struct {
@@ -31,7 +31,7 @@ func (r *Registry) Add(job *Job) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 	if _, ok := r.jobs[job.id]; ok {
-		return ErrDupicateJob
+		return ErrDuplicateJob
 	}
 	r.jobs[job.id] = job
 	return nil

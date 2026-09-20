@@ -7,11 +7,13 @@ import (
 
 func TestRegistryAddAndGet(t *testing.T) {
 	registery := NewRegistry()
+	output, err := NewOutput(t.TempDir())
 	job, err := NewJob(
 		"job-1",
 		"zhu",
 		[]string{"ls", "-la"},
 		time.Now(),
+		output,
 	)
 	if err != nil {
 		t.Fatalf("newjob failed %v", err)

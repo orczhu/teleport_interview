@@ -13,7 +13,7 @@ const outputChunkSize = 32 * 1024
 var (
 	ErrOutputClosed        = errors.New("output is closed")
 	ErrInvalidOutputOffset = errors.New("onput offset less than 0")
-	ErrNilOuputWriter      = errors.New("output writer is nil")
+	ErrNilOutputWriter     = errors.New("output writer is nil")
 )
 
 type Output struct {
@@ -90,7 +90,7 @@ func (o *Output) ReadFrom(ctx context.Context, offset int64, write func([]byte) 
 	}
 
 	if write == nil {
-		return ErrNilOuputWriter
+		return ErrNilOutputWriter
 	}
 
 	for {
