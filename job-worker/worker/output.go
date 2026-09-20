@@ -84,6 +84,13 @@ func (o *Output) Close(err error) {
 	o.notifyReadersLocked()
 }
 
+func (o *Output) Write(data []byte) (int, error) {
+	if err := o.Append(data); err != nil {
+		return 0, err
+	}
+	return len(data), nil
+}
+
 func (o *Output) ReadFrom(ctx context.Context, offset int64, write func([]byte) error) error {
 	if offset < 0 {
 		return ErrInvalidOutputOffset

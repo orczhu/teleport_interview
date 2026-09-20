@@ -3,6 +3,7 @@ package worker
 import (
 	"bytes"
 	"context"
+	"errors"
 	"testing"
 )
 
@@ -79,5 +80,37 @@ func TestOutputAppendNotifyWaiters(t *testing.T) {
 		// receive signal
 	default:
 		t.Fatalf("waiter did not receive signal")
+	}
+}
+
+func TestOutputWrite(t *testing.T) {
+	output := newTestOutput(t)
+	n, err := output.Write([]byte("hello"))
+	if err != nil {
+		t.Fatalf("write failed %v", nil)
+	}
+
+	if n != len("hello") {
+		t.Fatalf("Write not complete!")
+	}
+	output.Close(nil)
+	got, err := readAllOutput(context.Background(), output, 0)
+	if err != nil {
+		t.Fatalf("Read failed %v", err)
+	}
+	if string(got) != "hello" {
+		t.Fatalf("output %v is not equal to hello", got)
+	}
+}
+
+func TestOutputAfterClose(t *testing.T) {
+	output := newTestOutput(t)
+	output.Close(nil)
+	n, err := output.Write([]byte("later"))
+	if !errors.Is(err, ErrOutputClosed) {
+		t.Fatalf("Write error want ErrOutputClose, but get %v", err)
+	}
+	if n != 0 {
+		t.Fatalf("unexpeceted write-through")
 	}
 }
