@@ -11,6 +11,7 @@ var (
 	ErrEmptyOwner             = errors.New("job owner is empty")
 	ErrEmptyArgv              = errors.New("job argv is empty - no any command")
 	ErrInvalidStateTransition = errors.New("invalid job state transition")
+	ErrNilJobOutput           = errors.New("job output is nil")
 )
 
 type Job struct {
@@ -21,6 +22,7 @@ type Job struct {
 	argv      []string
 	startedAt time.Time
 	state     State
+	output    *Output
 }
 
 type JobSnapshot struct {
@@ -31,7 +33,7 @@ type JobSnapshot struct {
 	State     State
 }
 
-func NewJob(id, owner string, argv []string, startedAt time.Time) (*Job, error) {
+func NewJob(id, owner string, argv []string, startedAt time.Time, output *Output) (*Job, error) {
 	switch {
 	case id == "":
 		return nil, ErrEmptyJobID
@@ -39,6 +41,8 @@ func NewJob(id, owner string, argv []string, startedAt time.Time) (*Job, error) 
 		return nil, ErrEmptyOwner
 	case len(argv) == 0:
 		return nil, ErrEmptyArgv
+	case output == nil:
+		return nil, ErrNilJobOutput
 	}
 
 	return &Job{
@@ -47,6 +51,7 @@ func NewJob(id, owner string, argv []string, startedAt time.Time) (*Job, error) 
 		argv:      append([]string(nil), argv...),
 		startedAt: startedAt,
 		state:     StateRunning,
+		output:    output,
 	}, nil
 
 }

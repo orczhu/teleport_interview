@@ -9,8 +9,11 @@ import (
 func TestNewJob(t *testing.T) {
 	startedAt := time.Date(2026, time.September, 12, 10, 0, 0, 0, time.UTC)
 	argv := []string{"ls", "-la"}
-
-	job, err := NewJob("job-1", "alice", argv, startedAt)
+	output, err := NewOutput(t.TempDir())
+	if err != nil {
+		t.Fatalf("create job output failed! %v", err)
+	}
+	job, err := NewJob("job-1", "alice", argv, startedAt, output)
 	if err != nil {
 		t.Fatalf("newJob() error = %v", err)
 	}
